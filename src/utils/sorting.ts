@@ -45,14 +45,3 @@ export const calculateTransfer = (legs: TLeg[]) =>
     }
   }, 0);
 
-// export const sortTranfer = (sortDirection: string, flights: TFullFlight[]) => {
-//   if (sortDirection == "0") {
-//     flights.sort((a, b) => {
-//       const aTransfer = transferCount(a.flight.legs);
-//       const bTransfer = transferCount(b.flight.legs);
-//       if (aTransfer > bTransfer) return 1;
-//       if (aTransfer < bTransfer) return -1;
-//       return 0;
-//     });
-//   }
-// };

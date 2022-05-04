@@ -33,7 +33,7 @@ function App() {
     .filter(
       ({ flight }) =>
         !minPrice || parseInt(minPrice) < parseInt(flight.price.total.amount)
-    ); // переписать функцию красиво
+    );
 
   const filteredByCarriers = filteredByPrice.filter(
     ({ flight }) => !carriers.length || carriers.includes(flight.carrier.uid)
