@@ -30,9 +30,8 @@ export const Filters = ({ flights }: { flights: TFullFlight[] }) => {
     }, {});
   };
 
-  console.log(uniqCarriers(flights.map((flight) => flight.flight)));
-
   const selectedCarriersUids = searchParams.getAll("carrier");
+  const selectedTransfer = searchParams.getAll("transfer");
 
   return (
     <Box>
@@ -59,8 +58,18 @@ export const Filters = ({ flights }: { flights: TFullFlight[] }) => {
       <Flex flexDirection="column" marginTop={8}>
         <Box fontWeight="bold">Фильтровать</Box>
         <Checkbox
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            searchParams.append("transfer", "1");
+          isChecked={searchParams.getAll("transfer").includes("1")}
+          onChange={() => {
+            if (selectedTransfer.includes("1")) {
+              searchParams.delete("transfer");
+              selectedTransfer.forEach((num) => {
+                if (num !== "1") {
+                  searchParams.append("transfer", num);
+                }
+              });
+            } else {
+              searchParams.set("transfer", "1");
+            }
             setSearchParams(searchParams);
           }}
           marginTop={2}
@@ -68,8 +77,18 @@ export const Filters = ({ flights }: { flights: TFullFlight[] }) => {
           <Text fontSize="smaller"> - 1 пересадка</Text>
         </Checkbox>
         <Checkbox
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            searchParams.append("transfer", "0");
+          isChecked={selectedTransfer.includes("0")}
+          onChange={() => {
+            if (selectedTransfer.includes("0")) {
+              searchParams.delete("transfer");
+              selectedTransfer.forEach((num) => {
+                if (num !== "0") {
+                  searchParams.append("transfer", num);
+                }
+              });
+            } else {
+              searchParams.append("transfer", "0");
+            }
             setSearchParams(searchParams);
           }}
         >

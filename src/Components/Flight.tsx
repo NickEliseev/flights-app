@@ -26,7 +26,6 @@ export const Flight = ({ duration, segments }: TFlightProps) => {
   const arrivalWeekDay = arrivalDate.getDay();
   const { departureCity, departureAirport } = departurePoint;
 
-  console.log(arrivalPoint);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -38,7 +37,7 @@ export const Flight = ({ duration, segments }: TFlightProps) => {
         paddingLeft={2}
       >
         <Text fontWeight="bold">
-          {cityAirport(departureCity.caption, departureAirport.caption)}
+          {cityAirport(departureCity?.caption, departureAirport?.caption)}
         </Text>
         <Text
           color="primary"

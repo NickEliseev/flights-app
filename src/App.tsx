@@ -5,7 +5,7 @@ import { Filters } from "./Components/Filters";
 import { FlightCard } from "./Components/FlightCard";
 import flights from "./flights.json";
 import { TSerachResults } from "./types";
-import { sortFlights } from "./utils/sorting";
+import { calculateTransfer, sortFlights, sortTranfer } from "./utils/sorting";
 
 export const mockData = flights as { result: TSerachResults };
 const initialShowCount = 2;
@@ -16,6 +16,7 @@ function App() {
   const carriers = searchParams.getAll("carrier");
   const minPrice = searchParams.get("min-price");
   const maxPrice = searchParams.get("max-price");
+  const transferCount = searchParams.get("transfer");
 
   const showCount =
     searchParams.get("show-count") || initialShowCount.toString();
@@ -38,20 +39,29 @@ function App() {
     ({ flight }) => !carriers.length || carriers.includes(flight.carrier.uid)
   );
 
-  console.log(filteredByCarriers.length);
+  const filteredByTransfer = filteredByCarriers.filter(({ flight }) => {
+    switch (transferCount) {
+      case "1":
+        return calculateTransfer(flight.legs) === 2;
+      case "0":
+        return calculateTransfer(flight.legs) === 0;
+      default:
+        return flight;
+    }
+  });
 
   return (
     <Flex padding="5">
       <Box width="15%" marginRight="2rem">
         <Filters flights={filteredByPrice} />
       </Box>
-      <VStack width="65%" alignItems="baseline">
+      <VStack width="65%" alignItems="center">
         <Box width="80%">
-          {filteredByCarriers
+          {filteredByTransfer
             .slice(
               0,
-              filteredByCarriers.length < parseInt(showCount) - 1
-                ? filteredByCarriers.length
+              filteredByTransfer.length < parseInt(showCount) - 1
+                ? filteredByTransfer.length
                 : parseInt(showCount)
             )
             .map(({ flight: { carrier, price, legs }, flightToken }) => {
@@ -65,13 +75,14 @@ function App() {
               );
             })}
         </Box>
-        {filteredByCarriers.length > parseInt(showCount) && (
+        {filteredByTransfer.length > parseInt(showCount) && (
           <Button
+            width="20%"
             onClick={() => {
               const newParams = searchParams.set(
                 "show-count",
-                parseInt(showCount) + showCountStep > filteredByCarriers.length
-                  ? filteredByCarriers.length.toString()
+                parseInt(showCount) + showCountStep > filteredByTransfer.length
+                  ? filteredByTransfer.length.toString()
                   : (parseInt(showCount) + showCountStep).toString()
               );
               setSearchParams(searchParams);
